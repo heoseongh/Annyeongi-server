@@ -1,0 +1,82 @@
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annyeongi S3 Upload Page</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+    <input type="file" id="fileupload" multiple>
+    <button id="uploadClick">파일 업로드</button>
+    <span id="progress"></span>
+d
+</body>
+
+<script>
+    $(document).ready(() => {
+
+        const file = $("#fileupload")[0];
+        let fileCount = 0
+        // 파일을 선택할 때마다 FileList에 추가되도록 이벤트를 걸어둔다.
+        file.onchange = (e) => {
+            files = e.target.files; // FileList 객체
+            fileCount = files.length
+            console.log(files);
+            $('#progress').text(""); // progress 초기화
+        }
+
+        $('#uploadClick').on('click', () => {
+            // 파일 수만큼 업로드 반복
+            let done = 0
+            for (let i = 0; i < fileCount; i++) {
+                let fileName = files[i]['name'];
+                let reader = new FileReader();
+                reader.readAsDataURL(files[i]);
+                reader.onload = (e) => {
+                    let base64Data = reader.result;
+                    console.log(base64Data);
+                    let data = base64Data.split(',')[1]; // 순수 base64 데이터
+                    let fileLength = data.length; // 파일 크기
+
+                    let upload = () => {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            data: JSON.stringify({
+                                fileName: fileName,
+                                fileLength: fileLength,
+                                data: data
+                            }),
+                            url: 'https://p935suun2i.execute-api.ap-northeast-3.amazonaws.com/dev/s3/music/',
+                            success: (data) => {
+                                console.log(data)
+                                done = done + 1;
+                                if (done > fileCount) {
+                                    done = fileCount;
+                                }
+                                if (done == fileCount) {
+                                    alert(`전송이 완료되었습니다. 성공: ${done}개 `)
+                                }
+                                $('#progress').text(done + ' / ' + fileCount);
+                            },
+                            error: (jqXHR, textStatus, errorThrown) => {
+                            },
+                            complete: (jqXHR, textStatus) => {
+                            }
+                        });
+                    }
+                    setTimeout(upload, 1);
+                }
+            }
+        })
+    })
+</script>
+
+</html>
+
+<!-- li.innerHTML += `<ol> ${fileName} </ol>`; -->
