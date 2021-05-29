@@ -43,10 +43,10 @@ def uploadFile(local_file, bucket_file):
     s3 = s3ConnectionClient() # s3 클라이언트 연결
 
     # 파일 업로드
-    s3.put_object(
-        Bucket = BUCKET_NAME, # 버킷 이름
-        Body = local_file, # 업로드할 파일 경로
-        Key = bucket_file, # 업로드할 파일명
+    s3.upload_file(
+        local_file, # 업로드할 파일 경로(pull path)
+        BUCKET_NAME, # 버킷 이름
+        bucket_file, # 업로드할 파일명
     )
 
 # @description: S3 파일 다운로드 메서드
@@ -66,3 +66,24 @@ def downloadFile(local_file, bucket_file):
             print('해당 파일이 S3에 없습니다.')
         else:
             raise
+
+# @description: S3 다중 파일 업로드 메서드
+# @param: local_file, bucket_file (string, string)
+def multiUploadFile(files, PREFIX):
+
+    s3 = s3ConnectionClient() # s3 클라이언트 연결
+
+    for file in files:
+
+        if PREFIX:
+            UPLOAD_FILE_NAME = PREFIX + "/" + file
+        else:
+            UPLOAD_FILE_NAME = file
+
+        # 파일 업로드
+        s3.upload_file(
+            file, # 업로드할 파일 경로(pull path)
+            BUCKET_NAME, # 버킷 이름
+            UPLOAD_FILE_NAME, # 업로드할 파일명
+        )
+
