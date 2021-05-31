@@ -27,6 +27,6 @@ def toSpeech(text):
     # The response's audio_content is binary.
     with open("answer.mp3", "wb") as out:
         out.write(response.audio_content)
-        print('mp3 파일이 성공적으로 생성되었습니다.')
+        # print('mp3 파일이 성공적으로 생성되었습니다.')
         
     playsound('answer.mp3')
