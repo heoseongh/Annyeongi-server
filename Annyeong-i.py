@@ -1,7 +1,7 @@
 # from __future__ import division
 # from json import load
 
-from modules.musicplayer import MusicPlayer
+from packages.musicplayer import MusicPlayer
 import re
 import sys
 
