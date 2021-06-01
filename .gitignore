@@ -1,6 +1,10 @@
 ### system ###
 *.sh
 
+### resource ###
+*.mp3
+*.json
+
 ### python ###
 __pycache__/
 
