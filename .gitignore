@@ -10,6 +10,7 @@ __pycache__/
 
 # Environments
 venv/
+deploy/
 
 ### Node ###
 # Logs
