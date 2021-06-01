@@ -80,7 +80,7 @@ class MusicPlayer:
     # @description 특정 트랙 음악파일 가져오는 메서드
     # @param track (Number)
     # @return randomPlayList (String)
-    def getMusicFileFromTrack(self):
+    def getMusicFile(self):
         return self.musicFiles[self.playList[self.track]]
 
     # @description 음악 재생 메서드
@@ -88,7 +88,7 @@ class MusicPlayer:
         import multiprocessing
         from playsound import playsound
         # 재생할 음악 파일 선택
-        selectedMusicFile = self.getMusicFileFromTrack()
+        selectedMusicFile = self.getMusicFile()
         # 음악파일 재생을 위한 프로세스 생성
         self.playMusicProcess = multiprocessing.Process(target=playsound, args=(selectedMusicFile,), daemon=True)
         self.playMusicProcess.start()
@@ -96,3 +96,13 @@ class MusicPlayer:
     # @description 음악 종료 메서드
     def stopMusic(self):
         self.playMusicProcess.terminate()
+
+    # @description 다음 음악 재생 메서드
+    def playNextMusic(self):
+        """계속해서 다음 트랙을 재생하다가 플레이 리스트 끝까지 오면 다시 처음 트랙을 재생한다."""
+        self.track += 1
+        if(self.track not in self.playList):
+            self.track = 0
+            self.playMusic()
+        else:
+            self.playMusic()
